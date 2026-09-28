@@ -1,19 +1,17 @@
 import fastify from 'fastify';
-import type { FastifyRequest, FastifyReply } from 'fastify';
-import { serializerCompiler, validatorCompiler, jsonSchemaTransform } from 'fastify-type-provider-zod';
+import { serializerCompiler, validatorCompiler } from 'fastify-type-provider-zod';
 import helmet from '@fastify/helmet';
 import rateLimit from '@fastify/rate-limit';
 import sensible from '@fastify/sensible';
 import underPressure from '@fastify/under-pressure';
 import fastifyCookie from '@fastify/cookie';
 import fastifyJwt from '@fastify/jwt';
-import fastifySwagger from '@fastify/swagger';
-import fastifySwaggerUi from '@fastify/swagger-ui';
 
 import { env } from './config/env.js';
-import { AppError } from './errors/app-error.js';
-import { healthRoutes } from './modules/health/health.routes.js';
-import { usersRoutes } from './modules/users/users.routes.js';
+import { errorHandler } from './middlewares/error-handler.js';
+import { authenticate } from './middlewares/auth.js';
+import { swaggerPlugin } from './plugins/swagger.js';
+import { appRoutes } from './routes/index.js';
 
 export function buildApp() {
   const app = fastify({
@@ -55,58 +53,16 @@ export function buildApp() {
     },
   });
 
-  app.decorate('authenticate', async (request: FastifyRequest, reply: FastifyReply) => {
-    try {
-      await request.jwtVerify();
-    } catch (err) {
-      reply.send(err);
-    }
-  });
+  app.decorate('authenticate', authenticate);
 
-  // Swagger OpenAPI Documentation
-  app.register(fastifySwagger, {
-    openapi: {
-      info: {
-        title: 'Nimbuscraft API',
-        description: 'API Documentation generated automatically from Zod schemas',
-        version: '1.0.0',
-      },
-    },
-    transform: jsonSchemaTransform,
-  });
-
-  app.register(fastifySwaggerUi, {
-    routePrefix: '/docs',
-  });
+  // Swagger OpenAPI Documentation Plugin
+  app.register(swaggerPlugin);
 
   // Global Error Handler
-  app.setErrorHandler((error, _request, reply) => {
-    if (error instanceof AppError) {
-      return reply.status(error.statusCode).send({
-        error: error.name,
-        message: error.message,
-        details: error.details,
-      });
-    }
+  app.setErrorHandler(errorHandler);
 
-    if (error.validation) {
-      return reply.status(400).send({
-        error: 'ValidationError',
-        message: 'Invalid request payload or parameters',
-        details: error.validation,
-      });
-    }
-
-    app.log.error(error);
-    return reply.status(500).send({
-      error: 'InternalServerError',
-      message: env.NODE_ENV === 'production' ? 'An unexpected error occurred' : error.message,
-    });
-  });
-
-  // Register Routes
-  app.register(healthRoutes);
-  app.register(usersRoutes);
+  // Register All Centralized Routes
+  app.register(appRoutes);
 
   return app;
 }
