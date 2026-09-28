@@ -9,6 +9,8 @@ const envSchema = z.object({
   HOST: z.string().default('0.0.0.0'),
   LOG_LEVEL: z.enum(['fatal', 'error', 'warn', 'info', 'debug', 'trace']).default('info'),
   DATABASE_URL: z.string().default('postgresql://postgres:postgres@localhost:5432/nimbuscraft_db'),
+  JWT_SECRET: z.string().default('supersecret-jwt-secret-key-change-me'),
+  COOKIE_SECRET: z.string().default('supersecret-cookie-secret-key-change-me'),
 });
 
 const _env = envSchema.safeParse(process.env);

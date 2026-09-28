@@ -13,9 +13,10 @@ export const createUserSchema = z.object({
   email: z.string().email('Invalid email address'),
 });
 
+
 export const userIdParamSchema = z.object({
   id: z.string().uuid('Invalid user ID format'),
 });
 
-export type UserResponse = z.infer<typeof userResponseSchema>;
+export type UserReponse = z.infer<typeof userResponseSchema>;
 export type CreateUserInput = z.infer<typeof createUserSchema>;
