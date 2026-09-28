@@ -1,17 +1,16 @@
+import { eq } from 'drizzle-orm';
+import { db } from '../../db/index.js';
+import { users } from '../../db/schema.js';
 import { NotFoundError, ConflictError } from '../../errors/app-error.js';
 import type { CreateUserInput, UserResponse } from './users.routes.js';
-import { randomUUID } from 'node:crypto';
-
-// In-memory repository fallback for testing and development without live DB
-const memoryUsersStore: UserResponse[] = [];
 
 export class UsersService {
   static async findAll(): Promise<UserResponse[]> {
-    return memoryUsersStore;
+    return db.select().from(users);
   }
 
   static async findById(id: string): Promise<UserResponse> {
-    const user = memoryUsersStore.find((u) => u.id === id);
+    const [user] = await db.select().from(users).where(eq(users.id, id));
     if (!user) {
       throw new NotFoundError(`User with ID ${id} not found`);
     }
@@ -19,20 +18,19 @@ export class UsersService {
   }
 
   static async create(input: CreateUserInput): Promise<UserResponse> {
-    const existing = memoryUsersStore.find((u) => u.email === input.email);
+    const [existing] = await db.select().from(users).where(eq(users.email, input.email));
     if (existing) {
       throw new ConflictError(`User with email ${input.email} already exists`);
     }
 
-    const newUser: UserResponse = {
-      id: randomUUID(),
-      name: input.name,
-      email: input.email,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-    };
+    const [newUser] = await db
+      .insert(users)
+      .values({
+        name: input.name,
+        email: input.email,
+      })
+      .returning();
 
-    memoryUsersStore.push(newUser);
     return newUser;
   }
 }
