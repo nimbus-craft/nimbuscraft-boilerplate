@@ -1,16 +1,17 @@
 import fastify from 'fastify';
-import { serializerCompiler, validatorCompiler } from 'fastify-type-provider-zod';
+import { serializerCompiler, validatorCompiler, jsonSchemaTransform } from 'fastify-type-provider-zod';
 import helmet from '@fastify/helmet';
 import rateLimit from '@fastify/rate-limit';
 import sensible from '@fastify/sensible';
 import underPressure from '@fastify/under-pressure';
 import fastifyCookie from '@fastify/cookie';
 import fastifyJwt from '@fastify/jwt';
+import fastifySwagger from '@fastify/swagger';
+import fastifySwaggerUi from '@fastify/swagger-ui';
 
 import { env } from './config/env.js';
 import { errorHandler } from './middlewares/error-handler.js';
 import { authenticate } from './middlewares/auth.js';
-import { swaggerPlugin } from './plugins/swagger.js';
 import { appRoutes } from './routes/index.js';
 
 export function buildApp() {
@@ -55,8 +56,21 @@ export function buildApp() {
 
   app.decorate('authenticate', authenticate);
 
-  // Swagger OpenAPI Documentation Plugin
-  app.register(swaggerPlugin);
+  // Swagger OpenAPI Documentation
+  app.register(fastifySwagger, {
+    openapi: {
+      info: {
+        title: 'Nimbuscraft API',
+        description: 'API Documentation generated automatically from Zod schemas',
+        version: '1.0.0',
+      },
+    },
+    transform: jsonSchemaTransform,
+  });
+
+  app.register(fastifySwaggerUi, {
+    routePrefix: '/docs',
+  });
 
   // Global Error Handler
   app.setErrorHandler(errorHandler);

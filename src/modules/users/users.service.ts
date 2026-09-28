@@ -1,5 +1,5 @@
 import { NotFoundError, ConflictError } from '../../errors/app-error.js';
-import type { CreateUserInput, UserResponse } from './users.schemas.js';
+import type { CreateUserInput, UserResponse } from './users.routes.js';
 import { randomUUID } from 'node:crypto';
 
 // In-memory repository fallback for testing and development without live DB

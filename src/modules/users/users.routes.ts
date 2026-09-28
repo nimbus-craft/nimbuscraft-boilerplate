@@ -1,8 +1,27 @@
 import type { FastifyInstance } from 'fastify';
 import type { ZodTypeProvider } from 'fastify-type-provider-zod';
 import { z } from 'zod';
-import { UsersController } from './users.controller.js';
-import { createUserSchema, userResponseSchema, userIdParamSchema } from './users.schemas.js';
+import { UsersService } from './users.service.js';
+
+export const userResponseSchema = z.object({
+  id: z.string().uuid(),
+  name: z.string(),
+  email: z.string().email(),
+  createdAt: z.date().or(z.string()),
+  updatedAt: z.date().or(z.string()),
+});
+
+export const createUserSchema = z.object({
+  name: z.string().min(2, 'Name must be at least 2 characters'),
+  email: z.string().email('Invalid email address'),
+});
+
+export const userIdParamSchema = z.object({
+  id: z.string().uuid('Invalid user ID format'),
+});
+
+export type UserResponse = z.infer<typeof userResponseSchema>;
+export type CreateUserInput = z.infer<typeof createUserSchema>;
 
 export async function usersRoutes(app: FastifyInstance) {
   const typedApp = app.withTypeProvider<ZodTypeProvider>();
@@ -18,7 +37,7 @@ export async function usersRoutes(app: FastifyInstance) {
         },
       },
     },
-    UsersController.getUsers
+    async () => UsersService.findAll()
   );
 
   typedApp.get(
@@ -33,7 +52,7 @@ export async function usersRoutes(app: FastifyInstance) {
         },
       },
     },
-    UsersController.getUserById
+    async (request) => UsersService.findById(request.params.id)
   );
 
   typedApp.post(
@@ -48,6 +67,9 @@ export async function usersRoutes(app: FastifyInstance) {
         },
       },
     },
-    UsersController.createUser
+    async (request, reply) => {
+      const user = await UsersService.create(request.body);
+      return reply.status(201).send(user);
+    }
   );
 }
