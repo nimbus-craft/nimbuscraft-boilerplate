@@ -1,0 +1,23 @@
+# Dependencias
+node_modules/
+
+# Entorno y Secretos
+.env
+.env.*
+!.env.example
+
+# Compilación TypeScript
+dist/
+*.tsbuildinfo
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+logs/
+*.log
+
+# Sistema Operativo
+.DS_Store
+Thumbs.db
