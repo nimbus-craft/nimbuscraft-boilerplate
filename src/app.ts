@@ -14,16 +14,14 @@ import fastifySwagger from '@fastify/swagger';
 import fastifySwaggerUi from '@fastify/swagger-ui';
 
 import { env } from './config/env.js';
+import { loggerConfig } from './config/logger.js';
 import { errorHandler } from './middlewares/error-handler.js';
 import { authenticate } from './middlewares/auth.js';
 import { appRoutes } from './routes/index.js';
 
 export function buildApp() {
   const app = fastify({
-    logger: {
-      level: env.LOG_LEVEL,
-      transport: env.NODE_ENV === 'development' ? { target: 'pino-pretty' } : undefined,
-    },
+    logger: loggerConfig,
   });
 
   // Zod type provider compilers
