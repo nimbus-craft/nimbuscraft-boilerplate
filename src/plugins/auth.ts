@@ -3,7 +3,6 @@ import fastifyCookie from '@fastify/cookie';
 import fastifyJwt from '@fastify/jwt';
 import type { FastifyReply, FastifyRequest } from 'fastify';
 import { env } from '../config/env.js';
-import { authenticate } from '../middlewares/auth.js';
 
 declare module 'fastify' {
   interface FastifyInstance {
@@ -25,7 +24,16 @@ export default fp(
       },
     });
 
-    app.decorate('authenticate', authenticate);
+    app.decorate(
+      'authenticate',
+      async (request: FastifyRequest, reply: FastifyReply) => {
+        try {
+          await request.jwtVerify();
+        } catch (err) {
+          reply.send(err);
+        }
+      }
+    );
   },
   {
     name: 'auth',
