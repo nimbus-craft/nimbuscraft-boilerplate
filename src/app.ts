@@ -8,7 +8,6 @@ import {
 } from 'fastify-type-provider-zod';
 
 import { loggerConfig } from './config/logger.js';
-import { errorHandler } from './middlewares/error-handler.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -21,9 +20,6 @@ export function buildApp() {
   // Zod type provider compilers
   app.setValidatorCompiler(validatorCompiler);
   app.setSerializerCompiler(serializerCompiler);
-
-  // Global Error Handler
-  app.setErrorHandler(errorHandler);
 
   // Autoload Plugins
   app.register(autoload, {

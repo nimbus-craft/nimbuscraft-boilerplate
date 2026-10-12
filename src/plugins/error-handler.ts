@@ -1,3 +1,4 @@
+import fp from 'fastify-plugin';
 import type { FastifyError, FastifyRequest, FastifyReply } from 'fastify';
 import { AppError } from '../errors/app-error.js';
 import { env } from '../config/env.js';
@@ -5,7 +6,7 @@ import { env } from '../config/env.js';
 export function errorHandler(
   error: FastifyError,
   request: FastifyRequest,
-  reply: FastifyReply,
+  reply: FastifyReply
 ) {
   if (error instanceof AppError) {
     return reply.status(error.statusCode).send({
@@ -26,6 +27,18 @@ export function errorHandler(
   request.log.error(error);
   return reply.status(500).send({
     error: 'InternalServerError',
-    message: env.NODE_ENV === 'production' ? 'An unexpected error occurred' : error.message,
+    message:
+      env.NODE_ENV === 'production'
+        ? 'An unexpected error occurred'
+        : error.message,
   });
 }
+
+export default fp(
+  async (app) => {
+    app.setErrorHandler(errorHandler);
+  },
+  {
+    name: 'error-handler',
+  }
+);
