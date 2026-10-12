@@ -1,4 +1,4 @@
-import { db } from './index.js';
+import { db } from '../plugins/db.js';
 import { users } from './schema.js';
 
 async function seed() {

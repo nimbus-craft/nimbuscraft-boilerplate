@@ -1,5 +1,5 @@
 import { eq } from 'drizzle-orm';
-import { db } from '../../db/index.js';
+import { db } from '../../plugins/db.js';
 import { users } from '../../db/schema.js';
 import { NotFoundError, ConflictError } from '../../errors/app-error.js';
 import type { CreateUserInput, UserResponse } from './users.routes.js';
