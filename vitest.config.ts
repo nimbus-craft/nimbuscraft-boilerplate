@@ -13,5 +13,10 @@ export default defineConfig({
       '@utils': path.resolve(import.meta.dirname, './src/utils'),
       '@routes': path.resolve(import.meta.dirname, './src/routes'),
     },
+    server: {
+      deps: {
+        inline: ['@fastify/autoload'],
+      },
+    },
   },
 });
