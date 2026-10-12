@@ -1,20 +1,16 @@
-import type { FastifyInstance } from 'fastify';
+import type { FastifyPluginAsync } from 'fastify';
 import type { ZodTypeProvider } from 'fastify-type-provider-zod';
-import { z } from 'zod';
+import { healthResponseSchema } from './schemas.js';
 
-export async function healthRoutes(app: FastifyInstance) {
+const healthPlugin: FastifyPluginAsync = async (app) => {
   app.withTypeProvider<ZodTypeProvider>().get(
-    '/health',
+    '/',
     {
       schema: {
         summary: 'Health Check Endpoint',
         tags: ['Health'],
         response: {
-          200: z.object({
-            status: z.string(),
-            timestamp: z.string(),
-            uptime: z.number(),
-          }),
+          200: healthResponseSchema,
         },
       },
     },
@@ -26,4 +22,6 @@ export async function healthRoutes(app: FastifyInstance) {
       };
     }
   );
-}
+};
+
+export default healthPlugin;

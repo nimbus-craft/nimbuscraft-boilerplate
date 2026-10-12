@@ -13,6 +13,7 @@ export default defineConfig({
       '@utils': path.resolve(import.meta.dirname, './src/utils'),
       '@routes': path.resolve(import.meta.dirname, './src/routes'),
     },
+    include: ['src/**/*.test.ts'],
     server: {
       deps: {
         inline: ['@fastify/autoload'],
