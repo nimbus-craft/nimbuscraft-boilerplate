@@ -1,7 +1,6 @@
 import type { FastifyReply, FastifyRequest } from 'fastify';
 import { eq } from 'drizzle-orm';
 import { users } from '../../db/schema.js';
-import { NotFoundError, ConflictError } from '../../errors/app-error.js';
 import type { CreateUserInput, UserIdParam } from './schemas.js';
 
 export async function getUsersHandler(
@@ -22,7 +21,9 @@ export async function getUserByIdHandler(
     .where(eq(users.id, request.params.id));
 
   if (!user) {
-    throw new NotFoundError(`User with ID ${request.params.id} not found`);
+    throw request.server.httpErrors.notFound(
+      `User with ID ${request.params.id} not found`
+    );
   }
 
   return reply.send(user);
@@ -38,7 +39,9 @@ export async function createUserHandler(
     .where(eq(users.email, request.body.email));
 
   if (existing) {
-    throw new ConflictError(`User with email ${request.body.email} already exists`);
+    throw request.server.httpErrors.conflict(
+      `User with email ${request.body.email} already exists`
+    );
   }
 
   const [newUser] = await request.server.db
