@@ -16,6 +16,11 @@ declare module 'fastify' {
 
 export default fp(
   async (app) => {
+    if (app.hasDecorator('db')) {
+      db = app.db;
+      return;
+    }
+
     const pool = new pg.Pool({
       connectionString: env.DATABASE_URL,
     });
