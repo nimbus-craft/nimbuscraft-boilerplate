@@ -7,8 +7,8 @@ const mockUsers = [
     id: '00000000-0000-0000-0000-000000000000',
     name: 'Ada Lovelace',
     email: 'ada@nimbuscraft.dev',
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
+    createdAt: new Date(),
+    updatedAt: new Date(),
   },
 ];
 
@@ -29,8 +29,8 @@ export const dbMock = {
             id: 'ffffffff-ffff-ffff-ffff-ffffffffffff',
             name: data.name,
             email: data.email,
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString(),
+            createdAt: new Date(),
+            updatedAt: new Date(),
           },
         ]),
     }),
