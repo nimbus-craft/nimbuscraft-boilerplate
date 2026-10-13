@@ -29,6 +29,7 @@ export function buildApp() {
   // Autoload Routes
   app.register(autoload, {
     dir: join(__dirname, 'routes'),
+    options: { prefix: '/' },
   });
 
   return app;
