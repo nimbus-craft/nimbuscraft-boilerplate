@@ -35,6 +35,7 @@ export const dbMock = {
         ]),
     }),
   }),
+  execute: async () => [],
 } as unknown as Database;
 
 export async function buildTestServer(): Promise<FastifyInstance> {

@@ -25,10 +25,11 @@ export function errorHandler(
   }
 
   request.log.error(error);
-  return reply.status(500).send({
-    error: 'InternalServerError',
+  const statusCode = error.statusCode ?? 500;
+  return reply.status(statusCode).send({
+    error: error.name || 'InternalServerError',
     message:
-      env.NODE_ENV === 'production'
+      statusCode >= 500 && env.NODE_ENV === 'production'
         ? 'An unexpected error occurred'
         : error.message,
   });
