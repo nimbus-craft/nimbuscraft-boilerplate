@@ -1,5 +1,5 @@
-import { buildApp } from './app.js';
-import { env } from './config/env.js';
+import { buildApp } from '@/app.js';
+import { env } from '@config/env.js';
 
 const app = buildApp();
 
@@ -20,7 +20,7 @@ const shutdown = async (signal: string) => {
     app.log.info('Server closed successfully.');
     process.exit(0);
   } catch (err) {
-    app.log.error('Error during server shutdown:', err);
+    app.log.error(err, 'Error during server shutdown');
     process.exit(1);
   }
 };

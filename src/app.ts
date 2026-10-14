@@ -7,7 +7,7 @@ import {
   validatorCompiler,
 } from 'fastify-type-provider-zod';
 
-import { loggerConfig } from './config/logger.js';
+import { loggerConfig } from '@config/logger.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);

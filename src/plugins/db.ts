@@ -1,8 +1,8 @@
 import fp from 'fastify-plugin';
 import { drizzle, NodePgDatabase } from 'drizzle-orm/node-postgres';
 import pg from 'pg';
-import { env } from '../config/env.js';
-import * as schema from '../db/schema.js';
+import { env } from '@config/env.js';
+import * as schema from '@db/schema.js';
 
 export type Database = NodePgDatabase<typeof schema>;
 

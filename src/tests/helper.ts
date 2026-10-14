@@ -1,6 +1,6 @@
 import type { FastifyInstance } from 'fastify';
-import { buildApp } from '../app.js';
-import type { Database } from '../plugins/db.js';
+import { buildApp } from '@/app.js';
+import type { Database } from '@plugins/db.js';
 
 const mockUsers = [
   {

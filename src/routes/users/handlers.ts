@@ -1,6 +1,6 @@
 import type { FastifyReply, FastifyRequest } from 'fastify';
 import { eq } from 'drizzle-orm';
-import { users } from '../../db/schema.js';
+import { users } from '@db/schema.js';
 import type { CreateUserInput, UserIdParam } from './schemas.js';
 
 export async function getUsersHandler(

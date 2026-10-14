@@ -1,7 +1,7 @@
 import fp from 'fastify-plugin';
 import type { FastifyError, FastifyRequest, FastifyReply } from 'fastify';
 import { hasZodFastifySchemaValidationErrors } from 'fastify-type-provider-zod';
-import { env } from '../config/env.js';
+import { env } from '@config/env.js';
 
 interface ValidationErrorDetail {
   field: string;

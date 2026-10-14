@@ -1,6 +1,6 @@
 import { describe, it, expect, beforeAll, afterAll } from 'vitest';
 import type { FastifyInstance } from 'fastify';
-import { buildTestServer } from './tests/helper.js';
+import { buildTestServer } from '@tests/helper.js';
 
 describe('GET /health (Under-Pressure status route)', () => {
   let app: FastifyInstance;

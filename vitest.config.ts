@@ -7,11 +7,11 @@ export default defineConfig({
     environment: 'node',
     alias: {
       '@config': path.resolve(import.meta.dirname, './src/config'),
-      '@controllers': path.resolve(import.meta.dirname, './src/controllers'),
-      '@middlewares': path.resolve(import.meta.dirname, './src/middlewares'),
-      '@modules': path.resolve(import.meta.dirname, './src/modules'),
-      '@utils': path.resolve(import.meta.dirname, './src/utils'),
+      '@db': path.resolve(import.meta.dirname, './src/db'),
+      '@plugins': path.resolve(import.meta.dirname, './src/plugins'),
       '@routes': path.resolve(import.meta.dirname, './src/routes'),
+      '@tests': path.resolve(import.meta.dirname, './src/tests'),
+      '@': path.resolve(import.meta.dirname, './src'),
     },
     include: ['src/**/*.test.ts'],
     server: {

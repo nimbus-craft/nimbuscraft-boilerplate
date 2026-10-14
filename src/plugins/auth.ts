@@ -2,7 +2,7 @@ import fp from 'fastify-plugin';
 import fastifyCookie from '@fastify/cookie';
 import fastifyJwt from '@fastify/jwt';
 import type { FastifyReply, FastifyRequest } from 'fastify';
-import { env } from '../config/env.js';
+import { env } from '@config/env.js';
 
 declare module 'fastify' {
   interface FastifyInstance {

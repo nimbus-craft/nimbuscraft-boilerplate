@@ -1,6 +1,6 @@
 import { z } from 'zod';
 import { createSelectSchema, createInsertSchema } from 'drizzle-zod';
-import { users } from '../../db/schema.js';
+import { users } from '@db/schema.js';
 
 export const userResponseSchema = createSelectSchema(users);
 export const userIdParamSchema = userResponseSchema.pick({ id: true });
