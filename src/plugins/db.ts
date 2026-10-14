@@ -6,8 +6,6 @@ import * as schema from '../db/schema.js';
 
 export type Database = NodePgDatabase<typeof schema>;
 
-export let db: Database;
-
 declare module 'fastify' {
   interface FastifyInstance {
     db: Database;
@@ -17,7 +15,6 @@ declare module 'fastify' {
 export default fp(
   async (app) => {
     if (app.hasDecorator('db')) {
-      db = app.db;
       return;
     }
 
@@ -26,7 +23,6 @@ export default fp(
     });
 
     const drizzleDb = drizzle(pool, { schema });
-    db = drizzleDb;
 
     app.decorate('db', drizzleDb);
 
