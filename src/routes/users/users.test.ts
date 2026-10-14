@@ -41,7 +41,7 @@ describe('Users Route', () => {
     expect(body.email).toBe('ada@nimbuscraft.dev');
   });
 
-  it('should reject invalid user payload', async () => {
+  it('should reject invalid user payload and return readable field validation errors', async () => {
     const response = await app.inject({
       method: 'POST',
       url: '/users',
@@ -52,14 +52,23 @@ describe('Users Route', () => {
     });
 
     expect(response.statusCode).toBe(400);
+    const body = JSON.parse(response.payload);
+    expect(body).toHaveProperty('error', 'ValidationError');
+    expect(body).toHaveProperty('details');
+    expect(Array.isArray(body.details)).toBe(true);
+    expect(body.details.some((d: { field: string }) => d.field === 'name')).toBe(true);
+    expect(body.details.some((d: { field: string }) => d.field === 'email')).toBe(true);
   });
 
-  it('should return 400 for invalid uuid in param', async () => {
+  it('should return 400 with param field error for invalid uuid in param', async () => {
     const response = await app.inject({
       method: 'GET',
       url: '/users/invalid-uuid',
     });
 
     expect(response.statusCode).toBe(400);
+    const body = JSON.parse(response.payload);
+    expect(body).toHaveProperty('error', 'ValidationError');
+    expect(body.details.some((d: { field: string }) => d.field === 'id')).toBe(true);
   });
 });
