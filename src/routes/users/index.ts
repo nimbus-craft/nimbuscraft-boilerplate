@@ -1,22 +1,12 @@
 import type { FastifyPluginAsync } from 'fastify';
-import type { ZodTypeProvider } from 'fastify-type-provider-zod';
-import {
-  createUserRouteSchema,
-  getUserByIdSchema,
-  getUsersSchema,
-} from './schemas.js';
-import {
-  createUserHandler,
-  getUserByIdHandler,
-  getUsersHandler,
-} from './handlers.js';
+import { listUsersRoute } from './users.list.js';
+import { getUserByIdRoute } from './users.get.js';
+import { createUserRoute } from './users.create.js';
 
 const usersPlugin: FastifyPluginAsync = async (app) => {
-  const api = app.withTypeProvider<ZodTypeProvider>();
-
-  api.get('/', { schema: getUsersSchema }, getUsersHandler);
-  api.get('/:id', { schema: getUserByIdSchema }, getUserByIdHandler);
-  api.post('/', { schema: createUserRouteSchema }, createUserHandler);
+  await app.register(listUsersRoute);
+  await app.register(getUserByIdRoute);
+  await app.register(createUserRoute);
 };
 
 export default usersPlugin;
